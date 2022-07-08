@@ -2,7 +2,7 @@ name: flask-helloworld
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
 env:
   REGISTRY: ghcr.io
   REPO: ghcr.io/namnextx/java-based-image
@@ -25,7 +25,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tag\//}" >> $GITHUB_ENV"
+        run: echo "TAG=${GITHUB_REF/refs\/tag\//}" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
