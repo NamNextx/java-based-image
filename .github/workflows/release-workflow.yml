@@ -4,6 +4,7 @@ on:
     branches: [ develop ]
 env:
   REGISTRY: ghcr.io
+  REPO: ghcr.io/NamNextx/java-based-image
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -27,14 +28,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Cache Docker Image Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         id: docker_build
@@ -43,9 +36,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          tags: ${{ env.REPO }}
 
       - name: Verify
         run: echo ${{ steps.docker_build.outputs.digest }}
